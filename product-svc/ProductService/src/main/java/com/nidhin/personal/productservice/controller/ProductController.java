@@ -1,6 +1,8 @@
 package com.nidhin.personal.productservice.controller;
 
 import com.nidhin.personal.productservice.Service.FakeStoreService;
+import com.nidhin.personal.productservice.builder.ProductMapper;
+import com.nidhin.personal.productservice.dto.FakeStoreResponseDTO;
 import com.nidhin.personal.productservice.dto.ProductResponseDTO;
 import com.nidhin.personal.productservice.model.ProductModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,7 @@ public class ProductController {
     @GetMapping("/product/{id}")
     public ResponseEntity<?> getProudctById(@PathVariable(name = "id") Long id) {
         ProductModel response = svc.getProductById(id);
-        ProductResponseDTO dto = toProductResponseDTO(response);
+        ProductResponseDTO dto = ProductMapper.toProductResponseDTO(response);
         return  new ResponseEntity<ProductResponseDTO>(dto, HttpStatus.OK);
 
     }
@@ -28,7 +30,16 @@ public class ProductController {
     }
 
     @PostMapping("/product")
-    public  void create(){
+    public  ResponseEntity<?> create(@RequestBody FakeStoreResponseDTO dto){
+        ProductModel model =
+        svc.createProduct(dto.getTitle(),
+                          dto.getDescription(),
+                          dto.getPrice(),
+                          dto.getCategory(),
+                          dto.getImage());
+        ProductResponseDTO response = ProductMapper.toProductResponseDTO(model);
+        return new ResponseEntity<ProductResponseDTO>(response,
+                                                      HttpStatus.CREATED);
 
     }
     @PutMapping("/product/{id}")
@@ -38,16 +49,5 @@ public class ProductController {
     @DeleteMapping("product/{id}")
     public  void delete(@PathVariable(name = "id") Long id) {
 
-    }
-
-    private ProductResponseDTO toProductResponseDTO(ProductModel product) {
-        ProductResponseDTO dto = new ProductResponseDTO();
-        dto.setId(product.getId());
-        dto.setCategory(product.getCategory());
-        dto.setTitle(product.getTitle());
-        dto.setDescription(product.getDescription());
-        dto.setPrice(product.getPrice());
-        dto.setImageUrl(product.getImageUrl());
-        return  dto;
     }
 }

@@ -5,5 +5,9 @@ import org.springframework.stereotype.Service;
 
 public interface ProductService {
     public ProductModel getProductById(Long id);
-    public void createProduct();
+    public ProductModel createProduct(String title,
+                                      String description,
+                                      String price,
+                                      String category,
+                                      String image);
 }

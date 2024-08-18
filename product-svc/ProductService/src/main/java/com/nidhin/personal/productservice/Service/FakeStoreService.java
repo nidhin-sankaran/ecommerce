@@ -1,5 +1,6 @@
 package com.nidhin.personal.productservice.Service;
 
+import com.nidhin.personal.productservice.builder.ProductMapper;
 import com.nidhin.personal.productservice.dto.FakeStoreResponseDTO;
 import com.nidhin.personal.productservice.model.Category;
 import com.nidhin.personal.productservice.model.ProductModel;
@@ -19,25 +20,30 @@ public class FakeStoreService implements  ProductService {
         ResponseEntity<FakeStoreResponseDTO> response = restTemp.getForEntity("https://fakestoreapi.com/products/" + id,
                                                                               FakeStoreResponseDTO.class);
         FakeStoreResponseDTO dto = response.getBody();
-        return  toModel(dto);
+        return  ProductMapper.toModel(dto);
 
     }
 
     @Override
-    public void createProduct() {
+    public ProductModel createProduct(String title,
+                                      String description,
+                                      String price,
+                                      String category,
+                                      String image) {
+        FakeStoreResponseDTO requestBody = new FakeStoreResponseDTO();
+        requestBody.setCategory(category);
+        requestBody.setDescription(description);
+        requestBody.setTitle(title);
+        requestBody.setPrice(price);
+        requestBody.setImage(image);
+
+        FakeStoreResponseDTO response = restTemp.postForObject("https://fakestoreapi.com/products",
+                                                                   requestBody,
+                                                                   FakeStoreResponseDTO.class);
+        ProductModel model = ProductMapper.toModel(response);
+        return  model;
 
     }
 
-    public  ProductModel toModel(FakeStoreResponseDTO dto) {
-        Category category = new Category();
-        ProductModel model = new ProductModel();
-        category.setCategoryName(dto.getCategory());
-        model.setId(dto.getId());
-        model.setCategory(category);
-        model.setDescription(dto.getDescription());
-        model.setTitle(dto.getTitle());
-        model.setPrice(Double.valueOf(dto.getPrice()));
-        model.setImageUrl(dto.getImage());
-        return model;
-    }
+
 }
