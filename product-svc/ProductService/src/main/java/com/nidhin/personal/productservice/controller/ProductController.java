@@ -1,34 +1,64 @@
 package com.nidhin.personal.productservice.controller;
 
 import com.nidhin.personal.productservice.Service.FakeStoreService;
+import com.nidhin.personal.productservice.Service.ProductService;
+import com.nidhin.personal.productservice.builder.ProductMapper;
+import com.nidhin.personal.productservice.dto.FakeStoreResponseDTO;
 import com.nidhin.personal.productservice.dto.ProductResponseDTO;
+import com.nidhin.personal.productservice.exceptions.InvalidProductIdException;
+import com.nidhin.personal.productservice.exceptions.ProductNotFoundException;
 import com.nidhin.personal.productservice.model.ProductModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 @RestController
 public class ProductController {
 
-    @Autowired
-    private FakeStoreService svc;
+    private ProductService svc;
+
+    public  ProductController(@Qualifier("SelfProductService") ProductService svc) {
+        this.svc = svc;
+    }
 
     @GetMapping("/product/{id}")
-    public ResponseEntity<?> getProudctById(@PathVariable(name = "id") Long id) {
-        ProductModel response = svc.getProductById(id);
-        ProductResponseDTO dto = toProductResponseDTO(response);
+    public ResponseEntity<?> getProudctById(@PathVariable(name = "id") Long id) throws InvalidProductIdException, ProductNotFoundException {
+        if(id == null) {
+            throw  new InvalidProductIdException("Pdoduct id is null");
+        }
+        Optional<ProductModel> response = svc.getProductById(id);
+        if(!response.isPresent()) {
+            throw  new ProductNotFoundException("not found");
+        }
+        ProductResponseDTO dto = ProductMapper.toProductResponseDTO(response.get());
         return  new ResponseEntity<ProductResponseDTO>(dto, HttpStatus.OK);
 
     }
 
     @GetMapping("/products")
-    public  void getAllProducts() {
-
+    public  ResponseEntity<?> getAllProducts() {
+        List<ProductModel> products = svc.getAllProducts();
+        List<ProductResponseDTO> result = products.stream().map(ProductMapper::toProductResponseDTO).collect(Collectors.toList());
+        return  new ResponseEntity<List<ProductResponseDTO>>(result, HttpStatus.OK);
     }
 
     @PostMapping("/product")
-    public  void create(){
+    public  ResponseEntity<?> create(@RequestBody FakeStoreResponseDTO dto){
+        ProductModel model =
+        svc.createProduct(dto.getTitle(),
+                          dto.getDescription(),
+                          dto.getPrice(),
+                          dto.getCategory(),
+                          dto.getImage());
+        ProductResponseDTO response = ProductMapper.toProductResponseDTO(model);
+        return new ResponseEntity<ProductResponseDTO>(response,
+                                                      HttpStatus.CREATED);
 
     }
     @PutMapping("/product/{id}")
@@ -38,16 +68,5 @@ public class ProductController {
     @DeleteMapping("product/{id}")
     public  void delete(@PathVariable(name = "id") Long id) {
 
-    }
-
-    private ProductResponseDTO toProductResponseDTO(ProductModel product) {
-        ProductResponseDTO dto = new ProductResponseDTO();
-        dto.setId(product.getId());
-        dto.setCategory(product.getCategory());
-        dto.setTitle(product.getTitle());
-        dto.setDescription(product.getDescription());
-        dto.setPrice(product.getPrice());
-        dto.setImageUrl(product.getImageUrl());
-        return  dto;
     }
 }

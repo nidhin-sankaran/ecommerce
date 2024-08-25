@@ -1,9 +1,17 @@
 package com.nidhin.personal.productservice.Service;
 
 import com.nidhin.personal.productservice.model.ProductModel;
-import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 public interface ProductService {
-    public ProductModel getProductById(Long id);
-    public void createProduct();
+    public Optional<ProductModel> getProductById(Long id);
+    public ProductModel createProduct(String title,
+                                      String description,
+                                      String price,
+                                      String category,
+                                      String image);
+    public List<ProductModel> getAllProducts();
+
 }
