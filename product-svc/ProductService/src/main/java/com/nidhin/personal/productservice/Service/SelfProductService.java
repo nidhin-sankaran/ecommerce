@@ -6,9 +6,11 @@ import com.nidhin.personal.productservice.model.Category;
 import com.nidhin.personal.productservice.model.ProductModel;
 import com.nidhin.personal.productservice.repository.CategoryRepo;
 import com.nidhin.personal.productservice.repository.ProductRepo;
+import com.nidhin.personal.productservice.repository.projection.ProductProjection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,9 +31,10 @@ public class SelfProductService implements  ProductService {
     @Override
     public ProductModel createProduct(String title, String description, String price, String category, String image) {
         Category category1 = categorySvc.getCategoryByName(category);
-        if(category == null) {
+        if(category1 == null) {
             category1 = new Category();
             category1.setCategoryName(category);
+            category1.setCreatedAt(new Date());
             category1 = categorySvc.saveCategory(category1);
         }
         ProductModel model = new ProductModel();
@@ -49,4 +52,26 @@ public class SelfProductService implements  ProductService {
         List<ProductModel> list = productRepo.findAll();
         return list;
     }
+
+    @Override
+    public List<ProductModel> getAllProductsByCategory(String category) {
+        return productRepo.findAllByCategory_CategoryNameEquals(category);
+    }
+
+    @Override
+    public List<ProductModel> getAllProductsByTitleAndCategory(String title, String category) {
+        return productRepo.findAllProductsByTitleAndCategory(title,category);
+    }
+
+    @Override
+    public ProductModel findProductProjectionByIdTitleAndPrice(Long id, String title, Double price) {
+        ProductProjection projection = productRepo.findProductByTitleAndIdAndPrice(title,id,price);
+        ProductModel model = new ProductModel();
+        model.setPrice(projection.getPrice());
+        model.setId(projection.getId());
+        model.setTitle(projection.getTitle());
+        return model;
+    }
+
+
 }

@@ -48,6 +48,31 @@ public class ProductController {
         return  new ResponseEntity<List<ProductResponseDTO>>(result, HttpStatus.OK);
     }
 
+    @GetMapping("/products/category/{name}")
+    public  ResponseEntity<?> getAllProductsByCategory(@PathVariable(name = "name") String name) {
+        List<ProductModel> products = svc.getAllProductsByCategory(name);
+        List<ProductResponseDTO> result = products.stream().map(ProductMapper::toProductResponseDTO).collect(Collectors.toList());
+        return new ResponseEntity<List<ProductResponseDTO>>(result,HttpStatus.OK);
+    }
+
+    @GetMapping("/products/{title}")
+    public  ResponseEntity<?> getAllProductsByTitleAndCategory(@PathVariable(name = "title") String title, @RequestParam(name = "category") String category) {
+        List<ProductModel> products = svc.getAllProductsByTitleAndCategory(title, category);
+        List<ProductResponseDTO> result = products.stream().map(ProductMapper::toProductResponseDTO).collect(Collectors.toList());
+        return new ResponseEntity<List<ProductResponseDTO>>(result,HttpStatus.OK);
+    }
+
+    @GetMapping("product/projection/{id}")
+    public  ResponseEntity<?> getProductByTitleDescriptionAndId(@PathVariable(name = "id") Long id, @RequestParam(name = "title") String title, @RequestParam(name = "price") Double price) throws ProductNotFoundException {
+        ProductModel model = svc.findProductProjectionByIdTitleAndPrice(id,title,price);
+        if(model == null) {
+            throw  new ProductNotFoundException("not found");
+        }
+        ProductResponseDTO dto = ProductMapper.toProductResponseDTO(model);
+        return  new ResponseEntity<ProductResponseDTO>(dto, HttpStatus.OK);
+
+    }
+
     @PostMapping("/product")
     public  ResponseEntity<?> create(@RequestBody FakeStoreResponseDTO dto){
         ProductModel model =

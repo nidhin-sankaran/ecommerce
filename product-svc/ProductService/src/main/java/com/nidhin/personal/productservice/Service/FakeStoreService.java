@@ -3,6 +3,7 @@ package com.nidhin.personal.productservice.Service;
 import com.nidhin.personal.productservice.builder.ProductMapper;
 import com.nidhin.personal.productservice.dto.FakeStoreResponseDTO;
 import com.nidhin.personal.productservice.model.ProductModel;
+import com.nidhin.personal.productservice.repository.projection.ProductProjection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -56,6 +57,21 @@ public class FakeStoreService implements  ProductService {
         List<FakeStoreResponseDTO> results = List.of(productsDTOs.getBody());
         List<ProductModel> products = results.stream().map(ProductMapper::toModel).collect(Collectors.toList());
         return  products;
+    }
+
+    @Override
+    public List<ProductModel> getAllProductsByCategory(String category) {
+        return List.of();
+    }
+
+    @Override
+    public List<ProductModel> getAllProductsByTitleAndCategory(String title, String category) {
+        return List.of();
+    }
+
+    @Override
+    public ProductModel findProductProjectionByIdTitleAndPrice(Long id, String title, Double price) {
+        return null;
     }
 
 
