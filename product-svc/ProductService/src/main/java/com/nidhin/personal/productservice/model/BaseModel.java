@@ -19,8 +19,8 @@ public class BaseModel implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private  Long id;
+    private Long id;
     private Date createdAt;
-    private  Date lastUpdatedAt;
+    private Date lastUpdatedAt;
     private boolean isDeleted;
 }

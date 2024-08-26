@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service("FakeStoreService")
-public class FakeStoreService implements  ProductService {
+public class FakeStoreService implements ProductService {
 
     @Autowired
     private RestTemplate restTemp;
@@ -22,12 +22,12 @@ public class FakeStoreService implements  ProductService {
     @Override
     public Optional<ProductModel> getProductById(Long id) {
         ResponseEntity<FakeStoreResponseDTO> response = restTemp.getForEntity("https://fakestoreapi.com/products/" + id,
-                                                                              FakeStoreResponseDTO.class);
+                FakeStoreResponseDTO.class);
         FakeStoreResponseDTO dto = response.getBody();
-        if(dto == null) {
+        if (dto == null) {
             return null;
         }
-        return  Optional.of(ProductMapper.toModel(dto));
+        return Optional.of(ProductMapper.toModel(dto));
 
     }
 
@@ -45,18 +45,19 @@ public class FakeStoreService implements  ProductService {
         requestBody.setImage(image);
 
         FakeStoreResponseDTO response = restTemp.postForObject("https://fakestoreapi.com/products",
-                                                                   requestBody,
-                                                                   FakeStoreResponseDTO.class);
+                requestBody,
+                FakeStoreResponseDTO.class);
         ProductModel model = ProductMapper.toModel(response);
-        return  model;
+        return model;
 
     }
+
     @Override
-    public List<ProductModel> getAllProducts(){
-        ResponseEntity<FakeStoreResponseDTO[]> productsDTOs  = restTemp.getForEntity("https://fakestoreapi.com/products", FakeStoreResponseDTO[].class);
+    public List<ProductModel> getAllProducts() {
+        ResponseEntity<FakeStoreResponseDTO[]> productsDTOs = restTemp.getForEntity("https://fakestoreapi.com/products", FakeStoreResponseDTO[].class);
         List<FakeStoreResponseDTO> results = List.of(productsDTOs.getBody());
         List<ProductModel> products = results.stream().map(ProductMapper::toModel).collect(Collectors.toList());
-        return  products;
+        return products;
     }
 
     @Override

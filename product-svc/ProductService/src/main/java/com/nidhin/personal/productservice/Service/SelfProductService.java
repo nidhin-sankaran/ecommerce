@@ -15,14 +15,16 @@ import java.util.List;
 import java.util.Optional;
 
 @Service("SelfProductService")
-public class SelfProductService implements  ProductService {
+public class SelfProductService implements ProductService {
     private ProductRepo productRepo;
     private CategorySvc categorySvc;
-    SelfProductService(ProductRepo repo, CategorySvc categorySvc){
+
+    SelfProductService(ProductRepo repo, CategorySvc categorySvc) {
         this.productRepo = repo;
         this.categorySvc = categorySvc;
 
     }
+
     @Override
     public Optional<ProductModel> getProductById(Long id) {
         return productRepo.findById(id);
@@ -31,7 +33,7 @@ public class SelfProductService implements  ProductService {
     @Override
     public ProductModel createProduct(String title, String description, String price, String category, String image) {
         Category category1 = categorySvc.getCategoryByName(category);
-        if(category1 == null) {
+        if (category1 == null) {
             category1 = new Category();
             category1.setCategoryName(category);
             category1.setCreatedAt(new Date());
@@ -44,7 +46,7 @@ public class SelfProductService implements  ProductService {
         ProductModel response = productRepo.save(model);
 //        Category currCategory = new Category();
 //        ProductModel model = ProductMapper.toModel()
-    return  response;
+        return response;
     }
 
     @Override
@@ -60,12 +62,12 @@ public class SelfProductService implements  ProductService {
 
     @Override
     public List<ProductModel> getAllProductsByTitleAndCategory(String title, String category) {
-        return productRepo.findAllProductsByTitleAndCategory(title,category);
+        return productRepo.findAllProductsByTitleAndCategory(title, category);
     }
 
     @Override
     public ProductModel findProductProjectionByIdTitleAndPrice(Long id, String title, Double price) {
-        ProductProjection projection = productRepo.findProductByTitleAndIdAndPrice(title,id,price);
+        ProductProjection projection = productRepo.findProductByTitleAndIdAndPrice(title, id, price);
         ProductModel model = new ProductModel();
         model.setPrice(projection.getPrice());
         model.setId(projection.getId());

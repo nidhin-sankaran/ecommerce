@@ -15,7 +15,7 @@ import java.util.List;
 @Entity
 @Table(name = "category")
 public class Category extends BaseModel implements Serializable {
-    private  String categoryName;
+    private String categoryName;
     @JsonIgnore
     @OneToMany(mappedBy = "category")
     List<ProductModel> products;

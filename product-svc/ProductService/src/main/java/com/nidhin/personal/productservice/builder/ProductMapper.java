@@ -14,7 +14,7 @@ public class ProductMapper {
         dto.setDescription(product.getDescription());
         dto.setPrice(product.getPrice());
         dto.setImageUrl(product.getImageUrl());
-        return  dto;
+        return dto;
     }
 
     public static ProductModel toModel(FakeStoreResponseDTO dto) {

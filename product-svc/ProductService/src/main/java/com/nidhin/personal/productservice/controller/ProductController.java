@@ -23,75 +23,77 @@ public class ProductController {
 
     private ProductService svc;
 
-    public  ProductController(@Qualifier("SelfProductService") ProductService svc) {
+    public ProductController(@Qualifier("SelfProductService") ProductService svc) {
         this.svc = svc;
     }
 
     @GetMapping("/product/{id}")
     public ResponseEntity<?> getProudctById(@PathVariable(name = "id") Long id) throws InvalidProductIdException, ProductNotFoundException {
-        if(id == null) {
-            throw  new InvalidProductIdException("Pdoduct id is null");
+        if (id == null) {
+            throw new InvalidProductIdException("Pdoduct id is null");
         }
         Optional<ProductModel> response = svc.getProductById(id);
-        if(!response.isPresent()) {
-            throw  new ProductNotFoundException("not found");
+        if (!response.isPresent()) {
+            throw new ProductNotFoundException("not found");
         }
         ProductResponseDTO dto = ProductMapper.toProductResponseDTO(response.get());
-        return  new ResponseEntity<ProductResponseDTO>(dto, HttpStatus.OK);
+        return new ResponseEntity<ProductResponseDTO>(dto, HttpStatus.OK);
 
     }
 
     @GetMapping("/products")
-    public  ResponseEntity<?> getAllProducts() {
+    public ResponseEntity<?> getAllProducts() {
         List<ProductModel> products = svc.getAllProducts();
         List<ProductResponseDTO> result = products.stream().map(ProductMapper::toProductResponseDTO).collect(Collectors.toList());
-        return  new ResponseEntity<List<ProductResponseDTO>>(result, HttpStatus.OK);
+        return new ResponseEntity<List<ProductResponseDTO>>(result, HttpStatus.OK);
     }
 
     @GetMapping("/products/category/{name}")
-    public  ResponseEntity<?> getAllProductsByCategory(@PathVariable(name = "name") String name) {
+    public ResponseEntity<?> getAllProductsByCategory(@PathVariable(name = "name") String name) {
         List<ProductModel> products = svc.getAllProductsByCategory(name);
         List<ProductResponseDTO> result = products.stream().map(ProductMapper::toProductResponseDTO).collect(Collectors.toList());
-        return new ResponseEntity<List<ProductResponseDTO>>(result,HttpStatus.OK);
+        return new ResponseEntity<List<ProductResponseDTO>>(result, HttpStatus.OK);
     }
 
     @GetMapping("/products/{title}")
-    public  ResponseEntity<?> getAllProductsByTitleAndCategory(@PathVariable(name = "title") String title, @RequestParam(name = "category") String category) {
+    public ResponseEntity<?> getAllProductsByTitleAndCategory(@PathVariable(name = "title") String title, @RequestParam(name = "category") String category) {
         List<ProductModel> products = svc.getAllProductsByTitleAndCategory(title, category);
         List<ProductResponseDTO> result = products.stream().map(ProductMapper::toProductResponseDTO).collect(Collectors.toList());
-        return new ResponseEntity<List<ProductResponseDTO>>(result,HttpStatus.OK);
+        return new ResponseEntity<List<ProductResponseDTO>>(result, HttpStatus.OK);
     }
 
     @GetMapping("product/projection/{id}")
-    public  ResponseEntity<?> getProductByTitleDescriptionAndId(@PathVariable(name = "id") Long id, @RequestParam(name = "title") String title, @RequestParam(name = "price") Double price) throws ProductNotFoundException {
-        ProductModel model = svc.findProductProjectionByIdTitleAndPrice(id,title,price);
-        if(model == null) {
-            throw  new ProductNotFoundException("not found");
+    public ResponseEntity<?> getProductByTitleDescriptionAndId(@PathVariable(name = "id") Long id, @RequestParam(name = "title") String title, @RequestParam(name = "price") Double price) throws ProductNotFoundException {
+        ProductModel model = svc.findProductProjectionByIdTitleAndPrice(id, title, price);
+        if (model == null) {
+            throw new ProductNotFoundException("not found");
         }
         ProductResponseDTO dto = ProductMapper.toProductResponseDTO(model);
-        return  new ResponseEntity<ProductResponseDTO>(dto, HttpStatus.OK);
+        return new ResponseEntity<ProductResponseDTO>(dto, HttpStatus.OK);
 
     }
 
     @PostMapping("/product")
-    public  ResponseEntity<?> create(@RequestBody FakeStoreResponseDTO dto){
+    public ResponseEntity<?> create(@RequestBody FakeStoreResponseDTO dto) {
         ProductModel model =
-        svc.createProduct(dto.getTitle(),
-                          dto.getDescription(),
-                          dto.getPrice(),
-                          dto.getCategory(),
-                          dto.getImage());
+                svc.createProduct(dto.getTitle(),
+                        dto.getDescription(),
+                        dto.getPrice(),
+                        dto.getCategory(),
+                        dto.getImage());
         ProductResponseDTO response = ProductMapper.toProductResponseDTO(model);
         return new ResponseEntity<ProductResponseDTO>(response,
-                                                      HttpStatus.CREATED);
+                HttpStatus.CREATED);
 
     }
+
     @PutMapping("/product/{id}")
-    public  void update(@PathVariable(name = "id") Long id){
+    public void update(@PathVariable(name = "id") Long id) {
 
     }
+
     @DeleteMapping("product/{id}")
-    public  void delete(@PathVariable(name = "id") Long id) {
+    public void delete(@PathVariable(name = "id") Long id) {
 
     }
 }

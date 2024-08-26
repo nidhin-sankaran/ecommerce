@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Service("CategorSelfService")
-public class CategorSelfService implements  CategorySvc {
-    private  CategoryRepo categoryRepo;
+public class CategorSelfService implements CategorySvc {
+    private CategoryRepo categoryRepo;
 
     CategorSelfService(@Qualifier("CategoryRepo") CategoryRepo repo) {
         this.categoryRepo = repo;

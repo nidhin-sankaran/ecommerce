@@ -14,7 +14,7 @@ import java.io.Serializable;
 @Table(name = "product")
 @Getter
 @Setter
-public class ProductModel extends  BaseModel implements Serializable {
+public class ProductModel extends BaseModel implements Serializable {
     private String title;
     private String description;
     private Double price;

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ProductRepo extends JpaRepository<ProductModel,Long> {
+public interface ProductRepo extends JpaRepository<ProductModel, Long> {
     List<ProductModel> findAllById(Iterable<Long> longs);
 
     ProductModel findById(long id);
