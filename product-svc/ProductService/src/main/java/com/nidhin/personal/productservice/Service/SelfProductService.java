@@ -67,8 +67,9 @@ public class SelfProductService implements ProductService {
 
     @Override
     public ProductModel findProductProjectionByIdTitleAndPrice(Long id, String title, Double price) {
-        ProductProjection projection = productRepo.findProductByTitleAndIdAndPrice(title, id, price);
         ProductModel model = new ProductModel();
+        ProductProjection projection = productRepo.findProductByTitleAndIdAndPrice(title, id, price);
+
         model.setPrice(projection.getPrice());
         model.setId(projection.getId());
         model.setTitle(projection.getTitle());
