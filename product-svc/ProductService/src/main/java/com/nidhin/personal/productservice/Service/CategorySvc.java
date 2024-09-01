@@ -7,7 +7,10 @@ import java.util.Optional;
 
 public interface CategorySvc {
     public Optional<Category> getCategoryById(Long id);
-    public  Category getCategoryByName(String name);
+
+    public Category getCategoryByName(String name);
+
     public List<Category> getAllCategories();
+
     public Category saveCategory(Category category);
 }

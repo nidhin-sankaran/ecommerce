@@ -7,8 +7,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository("CategoryRepo")
-public interface CategoryRepo extends JpaRepository<Category,Long> {
+public interface CategoryRepo extends JpaRepository<Category, Long> {
     List<Category> findAll();
+
     Category findByCategoryName(String name);
+
     Category save(Category category);
 }

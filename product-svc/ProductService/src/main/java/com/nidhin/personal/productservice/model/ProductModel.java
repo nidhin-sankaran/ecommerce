@@ -11,10 +11,10 @@ import lombok.Setter;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "procuct")
+@Table(name = "product")
 @Getter
 @Setter
-public class ProductModel extends  BaseModel implements Serializable {
+public class ProductModel extends BaseModel implements Serializable {
     private String title;
     private String description;
     private Double price;
