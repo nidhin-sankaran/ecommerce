@@ -1,13 +1,12 @@
 package com.nidhin.personal.productservice.Service;
 
-import com.nidhin.personal.productservice.builder.ProductMapper;
-import com.nidhin.personal.productservice.dto.ProductResponseDTO;
 import com.nidhin.personal.productservice.model.Category;
 import com.nidhin.personal.productservice.model.ProductModel;
-import com.nidhin.personal.productservice.repository.CategoryRepo;
 import com.nidhin.personal.productservice.repository.ProductRepo;
 import com.nidhin.personal.productservice.repository.projection.ProductProjection;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -74,6 +73,13 @@ public class SelfProductService implements ProductService {
         model.setId(projection.getId());
         model.setTitle(projection.getTitle());
         return model;
+    }
+
+    @Override
+    public Page<ProductModel> findProductsByPageNumberAndSize(int pageNumber, int pageSize) {
+
+       Page<ProductModel> res = productRepo.findAll(PageRequest.of(pageNumber,pageSize));
+       return  res;
     }
 
 

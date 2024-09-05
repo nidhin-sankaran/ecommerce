@@ -3,8 +3,8 @@ package com.nidhin.personal.productservice.Service;
 import com.nidhin.personal.productservice.builder.ProductMapper;
 import com.nidhin.personal.productservice.dto.FakeStoreResponseDTO;
 import com.nidhin.personal.productservice.model.ProductModel;
-import com.nidhin.personal.productservice.repository.projection.ProductProjection;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -72,6 +72,12 @@ public class FakeStoreService implements ProductService {
 
     @Override
     public ProductModel findProductProjectionByIdTitleAndPrice(Long id, String title, Double price) {
+        return null;
+    }
+
+    @Override
+    public Page<ProductModel> findProductsByPageNumberAndSize(int pageNumber, int pageSize) {
+
         return null;
     }
 

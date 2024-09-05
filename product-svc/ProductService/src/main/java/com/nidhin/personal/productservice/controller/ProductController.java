@@ -10,6 +10,7 @@ import com.nidhin.personal.productservice.exceptions.ProductNotFoundException;
 import com.nidhin.personal.productservice.model.ProductModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -84,6 +85,18 @@ public class ProductController {
         ProductResponseDTO response = ProductMapper.toProductResponseDTO(model);
         return new ResponseEntity<ProductResponseDTO>(response,
                 HttpStatus.CREATED);
+
+    }
+
+    @GetMapping("/products/{page}/{size}")
+    public ResponseEntity<?> getPaginatedProducts(@PathVariable(name = "page") Integer page,
+                                                  @PathVariable(name = "size") Integer size) {
+        Page<ProductModel> response = svc.findProductsByPageNumberAndSize(page,size);
+        List<ProductModel> products = response.getContent();
+        List<ProductResponseDTO> res = products.stream()
+                                               .map(ProductMapper::toProductResponseDTO)
+                                               .collect(Collectors.toList());
+        return  new ResponseEntity<List<ProductResponseDTO>> (res,HttpStatus.OK);
 
     }
 

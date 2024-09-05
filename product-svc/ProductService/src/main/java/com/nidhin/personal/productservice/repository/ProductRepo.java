@@ -3,6 +3,9 @@ package com.nidhin.personal.productservice.repository;
 import com.nidhin.personal.productservice.model.Category;
 import com.nidhin.personal.productservice.model.ProductModel;
 import com.nidhin.personal.productservice.repository.projection.ProductProjection;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -24,4 +27,7 @@ public interface ProductRepo extends JpaRepository<ProductModel, Long> {
 
     @Query("select p.id as id, p.title as title, p.description as description,p.price as price from ProductModel  p where p.title = :title and p.price = :price and p.id = :id")
     ProductProjection findProductByTitleAndIdAndPrice(String title, Long id, Double price);
+
+
+    Page<ProductModel> findAll(Pageable pageable);
 }

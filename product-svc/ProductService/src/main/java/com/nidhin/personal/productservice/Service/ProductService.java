@@ -2,6 +2,7 @@ package com.nidhin.personal.productservice.Service;
 
 import com.nidhin.personal.productservice.model.ProductModel;
 import com.nidhin.personal.productservice.repository.projection.ProductProjection;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,5 +23,5 @@ public interface ProductService {
     public List<ProductModel> getAllProductsByTitleAndCategory(String title, String category);
 
     public ProductModel findProductProjectionByIdTitleAndPrice(Long id, String title, Double price);
-
+    public Page<ProductModel> findProductsByPageNumberAndSize(int pageNumber, int pageSize);
 }
