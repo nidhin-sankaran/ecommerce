@@ -7,6 +7,7 @@ import com.nidhin.personal.productservice.repository.projection.ProductProjectio
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -77,8 +78,8 @@ public class SelfProductService implements ProductService {
 
     @Override
     public Page<ProductModel> findProductsByPageNumberAndSize(int pageNumber, int pageSize) {
-
-       Page<ProductModel> res = productRepo.findAll(PageRequest.of(pageNumber,pageSize));
+       String sortBy = "id";
+       Page<ProductModel> res = productRepo.findAll(PageRequest.of(pageNumber,pageSize, Sort.Direction.DESC,sortBy));
        return  res;
     }
 
