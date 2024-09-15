@@ -10,6 +10,9 @@ import com.nidhin.personal.productservice.exceptions.ProductNotFoundException;
 import com.nidhin.personal.productservice.model.ProductModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +32,7 @@ public class ProductController {
     }
 
     @GetMapping("/product/{id}")
+    @Cacheable(value = "product", key = "#id")
     public ResponseEntity<?> getProudctById(@PathVariable(name = "id") Long id) throws InvalidProductIdException, ProductNotFoundException {
         if (id == null) {
             throw new InvalidProductIdException("Pdoduct id is null");
@@ -75,6 +79,7 @@ public class ProductController {
     }
 
     @PostMapping("/product")
+    @CachePut(value = "product", key = "#result.body.id", unless = "#result.body.id == null")
     public ResponseEntity<?> create(@RequestBody FakeStoreResponseDTO dto) {
         ProductModel model =
                 svc.createProduct(dto.getTitle(),
@@ -106,6 +111,7 @@ public class ProductController {
     }
 
     @DeleteMapping("product/{id}")
+    @CacheEvict(value = "product", key = "id")
     public void delete(@PathVariable(name = "id") Long id) {
 
     }
